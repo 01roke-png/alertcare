@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AlertCare Dashboard</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#faf8f5;--card:#fff;--ink:#1c2f55;--mut:#5b6b88;--line:#e6e9f0;--side:#27406e;--sidetx:#e8eef9;--hl:#3d5a94;
+--green:#1f9d66;--gbg:#dff5ea;--yellow:#b07d00;--ybg:#fff1c2;--red:#d6343b;--rbg:#fde3e3;--idle:#e9edf5}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10182b;--card:#182340;--ink:#e8eef9;--mut:#9fb0cf;--line:#2a3960;--side:#0c1426;--hl:#2b4275;--gbg:#14382b;--ybg:#3d3210;--rbg:#44191c;--idle:#22304f;--yellow:#f2c230;--green:#3ccf8e;--red:#ff6b70}}
+:root[data-theme="dark"]{--bg:#10182b;--card:#182340;--ink:#e8eef9;--mut:#9fb0cf;--line:#2a3960;--side:#0c1426;--hl:#2b4275;--gbg:#14382b;--ybg:#3d3210;--rbg:#44191c;--idle:#22304f;--yellow:#f2c230;--green:#3ccf8e;--red:#ff6b70}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;display:flex}
+aside{width:210px;background:var(--side);color:var(--sidetx);padding:22px 14px;display:flex;flex-direction:column;flex-shrink:0}
+.logo{font-size:21px;font-weight:600;margin:0 8px 22px}
+nav button{all:unset;cursor:pointer;display:block;width:100%;padding:11px 14px;border-radius:10px;margin-bottom:6px;font-size:15px;color:var(--sidetx)}
+nav button.on{background:var(--hl)}nav button:focus-visible{outline:2px solid #fff}
+.foot{margin-top:auto;font-size:13px;opacity:.8;padding:0 8px}
+main{flex:1;min-width:0;overflow:auto}
+header{display:flex;justify-content:flex-end;gap:22px;padding:14px 26px;border-bottom:1px solid var(--line);font-size:14px;align-items:center}
+.ok{color:var(--green)}.time{text-align:right;line-height:1.3}.time b{font-size:19px;font-weight:600;display:block}
+.wrap{padding:22px 26px}
+h1{margin:0;font-size:32px}.sub{color:var(--mut);margin:4px 0 20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.card h3{margin:0 0 12px;font-size:17px}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:9px 20px;border-radius:12px;font-weight:700;background:var(--idle);color:var(--mut)}
+.dot{width:10px;height:10px;border-radius:50%;background:currentColor}
+.pill.green{background:var(--gbg);color:var(--green)}.pill.yellow{background:var(--ybg);color:var(--yellow)}.pill.red{background:var(--rbg);color:var(--red)}
+.note{color:var(--mut);font-size:14px;margin:12px 0 0}
+.led{display:flex;justify-content:space-between;align-items:center;margin:9px 0;font-size:14px}
+.led i{display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--idle);margin-right:9px;vertical-align:-2px}
+.led i.green{background:var(--green)}.led i.yellow{background:#f5b301}.led i.red{background:var(--red)}
+.led b{font-size:13px;color:var(--mut)}
+.two{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+@media(max-width:760px){aside{width:64px}.logo,.foot,nav span{display:none}nav button{text-align:center;padding:11px 0}.two{grid-template-columns:1fr}.wrap{padding:16px}h1{font-size:26px}}
+.alert{display:flex;gap:14px;align-items:center;padding:14px;border-radius:12px;border:1px solid}
+.alert.green{background:var(--gbg);border-color:var(--green)}.alert.yellow{background:var(--ybg);border-color:var(--yellow)}.alert.red{background:var(--rbg);border-color:var(--red)}
+.alert.none{background:var(--idle);border-color:var(--line);color:var(--mut)}
+.mon{text-align:center}.mon h3{font-size:24px;margin:10px 0 4px}
+.big{font-size:22px;padding:14px 26px}
+.mon.fire{animation:p 1s infinite}@keyframes p{50%{background:var(--rbg)}}
+@media(prefers-reduced-motion:reduce){.mon.fire{animation:none;background:var(--rbg)}}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.btns button{cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 16px;border-radius:10px;font-size:14px}
+.btns button:focus-visible{outline:2px solid var(--hl)}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{text-align:left;padding:10px 6px;border-bottom:1px solid var(--line)}
+.scroll{overflow-x:auto}.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-weight:600}.flow span{background:var(--idle);padding:8px 12px;border-radius:10px}
+.cs{color:var(--mut);font-weight:600}.cs.ok{color:var(--green)}.cs.bad{color:var(--red)}.cs.wait{color:var(--yellow)}
+.cbtn{cursor:pointer;border:0;background:var(--hl);color:#fff;padding:9px 16px;border-radius:10px;font-size:14px;font-weight:600}
+.cbtn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+header{flex-wrap:wrap}
+.hide{display:none}
+</style></head><body>
+<aside><div class="logo">🏠 AlertCare</div>
+<nav><button class="on" data-v="home">🏠 <span>Home</span></button><button data-v="live">📈 <span>Live Status</span></button><button data-v="hist">🕒 <span>History</span></button><button data-v="set">⚙️ <span>Settings</span></button></nav>
+<div class="foot">♡ Safety<br>at your side</div></aside>
+<main>
+<header><span id="cs" class="cs" role="status" aria-live="polite">● Demo mode: Arduino not connected</span><button id="cb" class="cbtn">Connect Arduino</button><div class="time"><b id="clk">--:--</b><span id="dt"></span></div></header>
+<div class="wrap">
+
+<section id="home">
+<h1>Welcome!</h1><p class="sub">Here is the current status of your alert system.</p>
+<div class="grid">
+<div class="card"><h3>🔔 Doorbell Status</h3><span class="pill" id="p-door"><i class="dot"></i><span>OFF</span></span><p class="note" id="n-door">No doorbell alert detected.</p></div>
+<div class="card"><h3>📞 Telephone Status</h3><span class="pill" id="p-phone"><i class="dot"></i><span>OFF</span></span><p class="note" id="n-phone">Telephone is not ringing.</p></div>
+<div class="card"><h3>🔥 Fire Alarm Status</h3><span class="pill" id="p-fire"><i class="dot"></i><span>OFF</span></span><p class="note" id="n-fire">No fire alarm detected.</p></div>
+<div class="card"><h3>📳 Vibration Motor</h3><span class="pill" id="p-vib"><i class="dot"></i><span>OFF</span></span><p class="note" id="n-vib">Vibration is inactive.</p></div>
+<div class="card"><h3>💡 LED Indicators</h3>
+<div class="led"><span><i id="l-door"></i>Doorbell LED (green)</span><b id="s-door">OFF</b></div>
+<div class="led"><span><i id="l-phone"></i>Telephone LED (yellow)</span><b id="s-phone">OFF</b></div>
+<div class="led"><span><i id="l-fire"></i>Fire Alarm LED (red)</span><b id="s-fire">OFF</b></div></div>
+</div>
+<div class="two">
+<div class="card"><h3>🕒 Last Alert</h3><div class="alert none" id="last"><div><b>No alerts yet</b><div class="note" style="margin:2px 0 0">Waiting for the first event.</div></div></div>
+<p class="note">The system will continue to monitor for new alerts.</p></div>
+<div class="card mon" id="mon"><div style="font-size:54px" id="monI">🏠</div><h3 id="monT">Monitoring…</h3><div class="note" id="monS">Waiting for the next alert.</div></div>
+</div>
+<div class="card" style="margin-top:16px"><h3>Demo simulation</h3><p class="note" style="margin:0 0 10px">On the real system the Arduino detects the sound. These buttons only imitate that for the demo.</p>
+<div class="btns"><button data-e="door">Simulate doorbell</button><button data-e="phone">Simulate phone ring</button><button data-e="fire">Simulate fire alarm</button></div></div>
+</section>
+
+<section id="live" class="hide"><h1>Live Status</h1><p class="sub">Detected event right now.</p>
+<div class="card" style="margin-bottom:16px"><h3>Detected Event</h3><span class="pill big" id="det"><i class="dot"></i><span>None</span></span></div>
+<div class="card"><h3>System flow</h3><div class="flow"><span>Sound</span>→<span>Sound Sensor</span>→<span>Arduino</span>→<span>Decision</span>→<span>LED + Vibration</span>→<span>Dashboard</span></div></div></section>
+
+<section id="hist" class="hide"><h1>History</h1><p class="sub">Past alerts, newest first.</p>
+<div class="card scroll"><table><thead><tr><th>Event</th><th>Date</th><th>Time</th><th>LED</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+
+<section id="set" class="hide"><h1>Settings</h1><p class="sub">Color meaning for each event.</p>
+<div class="card"><div class="led"><span><i class="green"></i>Doorbell</span><b>Green LED + vibration</b></div>
+<div class="led"><span><i class="yellow"></i>Telephone</span><b>Yellow LED + vibration</b></div>
+<div class="led"><span><i class="red"></i>Fire alarm</span><b>Red LED + vibration</b></div></div></section>
+
+</div></main>
+<script>
+var E={door:{n:"Doorbell",c:"green",ic:"🔔",m:"Someone is at the door!",off:"No doorbell alert detected."},
+phone:{n:"Telephone",c:"yellow",ic:"📞",m:"Telephone is ringing!",off:"Telephone is not ringing."},
+fire:{n:"Fire Alarm",c:"red",ic:"🔥",m:"Fire alarm is sounding!",off:"No fire alarm detected."}};
+var hist=[],timer=null,$=function(i){return document.getElementById(i)};
+function pad(x){return (x<10?"0":"")+x}
+function stamp(d){return{d:d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}),t:pad(d.getHours())+":"+pad(d.getMinutes())}}
+function tick(){var s=stamp(new Date());$("clk").textContent=s.t;$("dt").textContent=s.d}
+function seed(){var now=Date.now();[["door",42],["phone",130],["fire",400],["door",1500]].forEach(function(a){var s=stamp(new Date(now-a[1]*60000));hist.push({k:a[0],d:s.d,t:s.t})});draw()}
+function draw(){$("rows").innerHTML=hist.slice().reverse().map(function(h){var e=E[h.k];return "<tr><td>"+e.ic+" "+e.n+"</td><td>"+h.d+"</td><td>"+h.t+"</td><td>"+e.c+"</td></tr>"}).join("")}
+function reset(){["door","phone","fire"].forEach(function(k){var p=$("p-"+k);p.className="pill";p.lastChild.textContent="OFF";$("n-"+k).textContent=E[k].off;$("l-"+k).className="";$("s-"+k).textContent="OFF"});
+$("p-vib").className="pill";$("p-vib").lastChild.textContent="OFF";$("n-vib").textContent="Vibration is inactive.";
+$("mon").className="card mon";$("monI").textContent="🏠";$("monT").textContent="Monitoring…";$("monS").textContent="Waiting for the next alert.";
+$("det").className="pill big";$("det").lastChild.textContent="None"}
+function fire(k){clearTimeout(timer);reset();var e=E[k],s=stamp(new Date());
+$("p-"+k).className="pill "+e.c;$("p-"+k).lastChild.textContent="ON";$("n-"+k).textContent=e.m;
+$("l-"+k).className=e.c;$("s-"+k).textContent="ON";
+$("p-vib").className="pill "+e.c;$("p-vib").lastChild.textContent="ON";$("n-vib").textContent="Vibration is active.";
+$("last").className="alert "+e.c;$("last").innerHTML="<div style='font-size:26px'>"+e.ic+"</div><div><b>"+e.n+" Alert</b><div class='note' style='margin:2px 0 0'>"+s.d+" · "+s.t+"</div></div>";
+$("mon").className="card mon"+(k==="fire"?" fire":"");$("monI").textContent=e.ic;$("monT").textContent=e.n+" detected";$("monS").textContent=e.m;
+$("det").className="pill big "+e.c;$("det").lastChild.textContent=e.n;
+hist.push({k:k,d:s.d,t:s.t});draw();timer=setTimeout(reset,6000)}
+document.querySelectorAll("[data-e]").forEach(function(b){b.onclick=function(){fire(b.dataset.e)}});
+document.querySelectorAll("nav button").forEach(function(b){b.onclick=function(){
+document.querySelectorAll("nav button").forEach(function(x){x.classList.remove("on")});b.classList.add("on");
+["home","live","hist","set"].forEach(function(v){$(v).classList.toggle("hide",v!==b.dataset.v)})}});
+/* ---- Web Serial (Arduino Uno, 9600 baud, newline-terminated messages) ---- */
+var MAP={DOORBELL:"door",PHONE:"phone",FIRE:"fire"},port=null,reader=null,closing=false;
+function setSt(t,c){var s=$("cs");s.textContent="● "+t;s.className="cs "+(c||"")}
+function teardown(msg,cls){
+ port=null;reader=null;closing=false;$("cb").textContent="Connect Arduino";$("cb").disabled=false;setSt(msg,cls)}
+function handle(line){
+ var m=line.trim().toUpperCase();
+ if(!m)return;
+ if(MAP[m])fire(MAP[m]);else console.warn("Unknown serial message:",m)}
+async function readLoop(){
+ var dec=new TextDecoder(),buf="",p=port,err=null;
+ try{
+  while(p.readable&&!closing){
+   reader=p.readable.getReader();
+   try{
+    for(;;){
+     var r=await reader.read();
+     if(r.done)break;
+     buf+=dec.decode(r.value,{stream:true});
+     var parts=buf.split("\n");buf=parts.pop();parts.forEach(handle)}
+   }catch(e){err=e}
+   finally{reader.releaseLock();reader=null}
+   if(err)break}
+ }catch(e){err=e}
+ if(closing||port!==p){try{await p.close()}catch(e){}return}
+ try{await p.close()}catch(e){}
+ teardown("Arduino disconnected"+(err?" (cable unplugged or port lost)":"")+". Click Connect to try again.","bad")}
+async function connect(){
+ if(!("serial" in navigator)){setSt("Web Serial is not supported here. Use Chrome or Edge on a computer.","bad");return}
+ $("cb").disabled=true;setSt("Choose the Arduino port in the popup…","wait");
+ try{
+  port=await navigator.serial.requestPort();
+  await port.open({baudRate:9600})
+ }catch(e){
+  var m=e.name==="NotFoundError"?"No port selected.":e.name==="InvalidStateError"?"Port is already open. Close other programs using it.":"Could not open the port ("+(e.message||e.name)+"). Close Arduino Serial Monitor and try again.";
+  teardown(m,"bad");return}
+ $("cb").disabled=false;$("cb").textContent="Disconnect";setSt("Arduino connected (9600 baud). Waiting for events…","ok");
+ readLoop()}
+async function disconnect(){
+ if(!port)return;
+ closing=true;$("cb").disabled=true;
+ try{if(reader)await reader.cancel()}catch(e){}
+ try{await port.close()}catch(e){}
+ teardown("Disconnected. Demo mode: Arduino not connected","")}
+$("cb").onclick=function(){port?disconnect():connect()};
+if("serial" in navigator)navigator.serial.addEventListener("disconnect",function(e){
+ if(port&&e.target===port&&!closing){closing=true;teardown("Arduino unplugged. Click Connect to try again.","bad")}});
+tick();setInterval(tick,15000);seed();
+</script></body></html>
